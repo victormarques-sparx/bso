@@ -10,10 +10,13 @@ export const onLogout = (btnLogout?: boolean): void => {
 
   // Só executa no cliente (navegador)
   if (!isServer()) {
+    // Dispara evento para notificar outros componentes sobre o logout
+    window.dispatchEvent(new CustomEvent('auth:logout'));
+
     const currentURL = `${window.location.pathname}${window.location.search}`;
 
     const redirectURL = btnLogout
-      ? '/bso-web/signin'
+      ? '/signin'
       : `/signin?redirect=${encodeURIComponent(currentURL)}`;
 
     window.location.replace(redirectURL);

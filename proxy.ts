@@ -1,26 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { CookieConstant } from './src/constants';
-
-export const runtime = 'edge';
-
-// Função inline para validar token no Edge Runtime
-const isTokenExpired = (token: string): boolean => {
-  try {
-    // Decodifica o JWT manualmente (base64)
-    const parts = token.split('.');
-    if (parts.length !== 3) return true;
-
-    const payload = JSON.parse(
-      atob(parts[1].replace(/-/g, '+').replace(/_/g, '/'))
-    ) as { exp?: number };
-
-    const currentTime = Math.floor(Date.now() / 1000);
-    return !payload?.exp || payload.exp <= currentTime;
-  } catch {
-    return true;
-  }
-};
+import { isTokenExpired } from './src/services/validateToken';
 
 export function proxy(request: NextRequest): NextResponse {
   const { pathname } = request.nextUrl;
@@ -88,7 +69,7 @@ export function proxy(request: NextRequest): NextResponse {
   return NextResponse.next();
 }
 
-// Configuração do matcher - define em quais rotas o middleware será executado
+// Configuração do matcher - define em quais rotas o proxy será executado
 export const config = {
   matcher: [
     /*
@@ -98,6 +79,6 @@ export const config = {
      * - favicon.ico (favicon file)
      * - public folder files
      */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/bso-web/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 };

@@ -3,19 +3,9 @@ import axios, {
   type AxiosResponse,
   type InternalAxiosRequestConfig,
 } from 'axios';
-import { jwtDecode } from 'jwt-decode';
 import { getTokenCookie } from './cookies';
+import { isTokenExpired } from './validateToken';
 import { onLogout } from './logout';
-
-const isTokenExpired = (token: string): boolean => {
-  try {
-    const decoded = jwtDecode<{ exp?: number }>(token);
-    const currentTime = Math.floor(Date.now() / 1000);
-    return !decoded?.exp || decoded.exp <= currentTime;
-  } catch {
-    return true;
-  }
-};
 
 export const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_API,

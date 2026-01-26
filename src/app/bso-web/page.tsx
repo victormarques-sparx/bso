@@ -1,11 +1,11 @@
 'use client';
 
+import type { UserProps } from '@/api';
 import { Container } from '@/components';
 import { getUserCookie, onLogout } from '@/services';
 import { cn } from '@/utils';
 import Image from 'next/image';
 import { useEffect, useState, type JSX } from 'react';
-import type { UserProps } from '@/types';
 
 export default function Home(): JSX.Element {
   const [user, setUser] = useState<UserProps | undefined>(undefined);
@@ -36,10 +36,15 @@ export default function Home(): JSX.Element {
             className="text-base-800 text-2xl font-semibold tracking-tight sm:text-3xl"
             suppressHydrationWarning
           >
-            {user?.firstName ? `Welcome back, ${user.firstName}!` : 'Welcome back'}
+            {user?.firstName
+              ? `Welcome back, ${user.firstName}!`
+              : 'Welcome back'}
           </h1>
+
           <p className="text-base-500 text-sm leading-relaxed sm:text-base">
-            We&apos;re making this space better for you.
+            Your information has been sent for analysis.
+            <br />
+            We will contact you once it is complete.
           </p>
         </div>
 
@@ -49,7 +54,7 @@ export default function Home(): JSX.Element {
             onClick={() => onLogout(true)}
             className={cn(
               'h-11 rounded-lg px-5 text-sm font-medium',
-              'border border-base-300 bg-transparent',
+              'border-base-300 border bg-transparent',
               'text-base-600 transition-colors duration-200',
               'hover:border-base-400 hover:bg-base-200 hover:text-base-700'
             )}

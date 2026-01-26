@@ -1,7 +1,7 @@
 'use client';
 
+import type { UserProps } from '@/api';
 import { CookieConstant } from '@/constants';
-import { type UserProps } from '@/types';
 import Cookie from 'js-cookie';
 
 // ==============================================

@@ -1,3 +1,4 @@
+import { AuthGuard } from '@/components';
 import { CheckUserInstitutions } from '@/containers';
 import { QueryProvider, ToasterProvider } from '@/providers';
 import '@/theme/globals.css';
@@ -24,9 +25,12 @@ export default function RootLayout({
       <body className={cn(figtree.variable, 'antialiased')}>
         <QueryProvider>
           <ToasterProvider />
-          <CheckUserInstitutions />
 
-          {children}
+          <AuthGuard>
+            <CheckUserInstitutions />
+
+            {children}
+          </AuthGuard>
         </QueryProvider>
       </body>
     </html>

@@ -1,4 +1,4 @@
-import type { UserProps } from '@/types';
+import type { UserProps } from './User.types';
 
 export interface LoginFormDataProps {
   username: string;

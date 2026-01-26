@@ -3,12 +3,17 @@
 import {
   useCitiesByState,
   useCountries,
+  useMyProfile,
   useRegisterInstitution,
   useStatesByCountry,
 } from '@/api';
 import { Button, Modal, Select, TextField } from '@/components';
 import { institutionsConstant } from '@/constants';
-import { getUserCookie } from '@/services';
+import {
+  getTokenCookie,
+  getUserCookie,
+  isTokenExpired,
+} from '@/services';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState, type JSX } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
@@ -19,7 +24,8 @@ import {
 } from './CheckUserInstitutions.types';
 
 export const CheckUserInstitutions = (): JSX.Element => {
-  const user = getUserCookie();
+  const [token, setToken] = useState<string | undefined>(getTokenCookie());
+  const [user, setUser] = useState(getUserCookie());
   const [isOpen, setIsOpen] = useState(false);
 
   const {
@@ -55,14 +61,44 @@ export const CheckUserInstitutions = (): JSX.Element => {
   );
 
   const registerInstitution = useRegisterInstitution();
+  const { data: myProfile, refetch: refetchMyProfile } = useMyProfile();
+
+  // Só renderiza se o usuário estiver logado (token existe e está válido)
+  const isAuthenticated = token && !isTokenExpired(token) && user;
+
+  // Monitora mudanças nos cookies (ex: após login)
+  useEffect(() => {
+    const checkAuth = (): void => {
+      const currentToken = getTokenCookie();
+      const currentUser = getUserCookie();
+      setToken(currentToken);
+      setUser(currentUser);
+    };
+
+    // Verifica imediatamente
+    checkAuth();
+
+    // Escuta evento customizado disparado após login/logout/atualização de usuário
+    window.addEventListener('auth:login', checkAuth);
+    window.addEventListener('auth:logout', checkAuth);
+    window.addEventListener('user:updated', checkAuth);
+
+    return () => {
+      window.removeEventListener('auth:login', checkAuth);
+      window.removeEventListener('auth:logout', checkAuth);
+      window.removeEventListener('user:updated', checkAuth);
+    };
+  }, []);
 
   useEffect(() => {
-    if (user?.institutions?.length === 0) {
+    if (isAuthenticated && user?.institutions?.length === 0) {
       setTimeout(() => {
         setIsOpen(true);
       }, 10);
     }
-  }, [user]);
+    // Se o usuário tem instituições, o modal não será aberto (condição acima será falsa)
+    // e será fechado explicitamente no onSubmit após o cadastro bem-sucedido
+  }, [user, isAuthenticated]);
 
   const onSubmit = async (
     data: CheckUserInstitutionsFormDataTypes
@@ -70,13 +106,25 @@ export const CheckUserInstitutions = (): JSX.Element => {
     try {
       await registerInstitution.mutateAsync(data);
       toast.success('Institution registered successfully');
-      // TODO: invalidar user, fechar modal, etc.
+
+      // Refaz a busca do perfil para garantir que temos os dados mais recentes
+      const { data: updatedUser } = await refetchMyProfile();
+
+      // Valida novamente se o usuário não tem instituições
+      if (updatedUser?.institutions && updatedUser.institutions.length > 0) {
+        // Se o usuário tem instituições, fecha o modal
+        setIsOpen(false);
+      } else {
+        // Se ainda não tem instituições, mantém o modal aberto
+        // (pode ser necessário cadastrar mais de uma instituição)
+      }
     } catch {
       toast.error('Failed to register institution. Please try again.');
     }
   };
 
-  if (!isOpen) return <></>;
+  // Só renderiza se o usuário estiver logado e o modal estiver aberto
+  if (!isAuthenticated || !isOpen) return <></>;
 
   return (
     <Modal
