@@ -1,0 +1,24 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "\n🔍 Executando validações antes do commit...\n"
+
+# Executar lint-staged
+echo "📝 Executando lint-staged..."
+if ! npx lint-staged; then
+  echo "\n❌ Erros de lint encontrados!"
+  echo "Por favor, corrija os erros antes de fazer o commit."
+  exit 1
+fi
+echo "✅ Lint-staged passou!\n"
+
+# Executar build
+echo "🏗️  Executando build..."
+if ! npm run build; then
+  echo "\n❌ Erros no build encontrados!"
+  echo "Por favor, corrija os erros antes de fazer o commit."
+  exit 1
+fi
+echo "✅ Build passou!\n"
+
+echo "✨ Todas as validações passaram! Prosseguindo com o commit..."

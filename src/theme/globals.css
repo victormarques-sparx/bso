@@ -1,0 +1,30 @@
+@import 'tailwindcss';
+
+@theme inline {
+  /* Fonts */
+  --font-sans: var(--font-figtree);
+
+  /* Font Sizes */
+  --text-3xl: 32px;
+
+  /* Colors */
+  --color-base-50: #f4f7fb;
+  --color-base-100: #e6ecf4;
+  --color-base-200: #ccd8e8;
+  --color-base-300: #9fb6d4;
+  --color-base-400: #6e8fb8;
+  --color-base-500: #4a6fa0;
+  --color-base-600: #355a88;
+  --color-base-700: #27466f;
+  --color-base-800: #1b3556;
+  --color-base-900: #12253f;
+  --color-base-950: #0b182b;
+}
+
+body {
+  @apply bg-base-100 text-base-700 font-sans;
+}
+
+button {
+  @apply cursor-pointer;
+}
