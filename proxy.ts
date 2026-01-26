@@ -36,10 +36,11 @@ export function proxy(request: NextRequest): NextResponse {
 
   // Rotas de autenticação
   const isAuthRoute =
-    pathname.startsWith('/signin') || pathname.startsWith('/signup');
+    pathname.startsWith('/bso-web/signin') ||
+    pathname.startsWith('/bso-web/signup');
 
   // Rota principal (home logada)
-  const isHomeRoute = pathname === '/';
+  const isHomeRoute = pathname === '/bso-web';
 
   // Se está em rota de área logada (não é rota de auth)
   if (!isAuthRoute) {
@@ -48,7 +49,9 @@ export function proxy(request: NextRequest): NextResponse {
 
     // Se não tem token ou user, faz logout (limpa cookies e redireciona)
     if (!token || !user) {
-      const response = NextResponse.redirect(new URL('/signin', request.url));
+      const response = NextResponse.redirect(
+        new URL('/bso-web/signin', request.url)
+      );
       response.cookies.delete(CookieConstant.authToken);
       response.cookies.delete(CookieConstant.user);
       return response;
@@ -59,7 +62,9 @@ export function proxy(request: NextRequest): NextResponse {
 
     // Se token existe mas está inválido, faz logout (limpa cookies)
     if (!isAuthenticated) {
-      const response = NextResponse.redirect(new URL('/signin', request.url));
+      const response = NextResponse.redirect(
+        new URL('/bso-web/signin', request.url)
+      );
       response.cookies.delete(CookieConstant.authToken);
       response.cookies.delete(CookieConstant.user);
       return response;
@@ -75,7 +80,7 @@ export function proxy(request: NextRequest): NextResponse {
 
   if (isAuthenticated) {
     // Se tentar acessar rotas de auth estando logado, redireciona para home
-    const url = new URL('/', request.url);
+    const url = new URL('/bso-web', request.url);
     return NextResponse.redirect(url);
   }
 

@@ -13,7 +13,7 @@ export const onLogout = (btnLogout?: boolean): void => {
     const currentURL = `${window.location.pathname}${window.location.search}`;
 
     const redirectURL = btnLogout
-      ? '/signin'
+      ? '/bso-web/signin'
       : `/signin?redirect=${encodeURIComponent(currentURL)}`;
 
     window.location.replace(redirectURL);

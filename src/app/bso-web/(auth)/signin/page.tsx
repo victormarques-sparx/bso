@@ -89,7 +89,7 @@ export default function SigninPage(): JSX.Element {
       <div className="text-base-500 mt-6 text-center text-sm">
         Don&apos;t have an account?{' '}
         <Link
-          href="/signup"
+          href="/bso-web/signup"
           className="text-base-500 hover:text-base-700 transition-colors duration-300 hover:underline"
         >
           Sign up
