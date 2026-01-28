@@ -1,5 +1,7 @@
 export * from './AuthGuard';
+export * from './Avatar';
 export * from './Button';
+export * from './Drawer';
 export * from './Grid';
 export * from './InputCurrency';
 export * from './InputPassword';

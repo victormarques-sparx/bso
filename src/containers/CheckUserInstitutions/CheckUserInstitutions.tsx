@@ -9,11 +9,7 @@ import {
 } from '@/api';
 import { Button, Modal, Select, TextField } from '@/components';
 import { institutionsConstant } from '@/constants';
-import {
-  getTokenCookie,
-  getUserCookie,
-  isTokenExpired,
-} from '@/services';
+import { getTokenCookie, getUserCookie, isTokenExpired } from '@/services';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState, type JSX } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
@@ -137,7 +133,7 @@ export const CheckUserInstitutions = (): JSX.Element => {
           {/* =============================== */}
           {/* Legal Name                      */}
           {/* =============================== */}
-          <div className="col-span-3 grid">
+          <div className="col-span-full grid xl:col-span-3">
             <TextField
               {...register('legalName')}
               label="Legal Name"
@@ -150,7 +146,7 @@ export const CheckUserInstitutions = (): JSX.Element => {
           {/* =============================== */}
           {/* Doing Business As               */}
           {/* =============================== */}
-          <div className="col-span-3 grid">
+          <div className="col-span-full grid xl:col-span-3">
             <TextField
               {...register('dbaName')}
               label="Doing Business As"
@@ -163,7 +159,7 @@ export const CheckUserInstitutions = (): JSX.Element => {
           {/* =============================== */}
           {/* Phone                           */}
           {/* =============================== */}
-          <div className="col-span-2 grid">
+          <div className="col-span-full grid xl:col-span-2">
             <TextField
               {...register('phone')}
               label="Phone"
@@ -176,7 +172,7 @@ export const CheckUserInstitutions = (): JSX.Element => {
           {/* =============================== */}
           {/* Tax ID                          */}
           {/* =============================== */}
-          <div className="col-span-2 grid">
+          <div className="col-span-full grid xl:col-span-2">
             <TextField
               {...register('taxId')}
               label="Tax ID"
@@ -189,7 +185,7 @@ export const CheckUserInstitutions = (): JSX.Element => {
           {/* =============================== */}
           {/* Institution Type                */}
           {/* =============================== */}
-          <div className="col-span-2 grid">
+          <div className="col-span-full grid xl:col-span-2">
             <Select
               {...register('institutionType')}
               label="Institution Type"
@@ -203,7 +199,7 @@ export const CheckUserInstitutions = (): JSX.Element => {
           {/* =============================== */}
           {/* Country                         */}
           {/* =============================== */}
-          <div className="col-span-2 grid">
+          <div className="col-span-full grid xl:col-span-2">
             <Select
               {...register('country')}
               label="Country"
@@ -223,7 +219,7 @@ export const CheckUserInstitutions = (): JSX.Element => {
           {/* =============================== */}
           {/* State                           */}
           {/* =============================== */}
-          <div className="col-span-2 grid">
+          <div className="col-span-full grid xl:col-span-2">
             <Select
               {...register('state')}
               label="State"
@@ -243,7 +239,7 @@ export const CheckUserInstitutions = (): JSX.Element => {
           {/* =============================== */}
           {/* City                            */}
           {/* =============================== */}
-          <div className="col-span-2 grid">
+          <div className="col-span-full grid xl:col-span-2">
             <Select
               {...register('city')}
               label="City"
