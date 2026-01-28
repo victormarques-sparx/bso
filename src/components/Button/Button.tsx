@@ -5,7 +5,7 @@ import { buttonSpinnerVariants, buttonVariants } from './Button.variants';
 
 export const Button = ({
   variant = 'primary',
-  size = 'md',
+  size = 'sm',
   isLoading = false,
   loadingText,
   fullWidth = false,

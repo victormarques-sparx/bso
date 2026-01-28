@@ -32,6 +32,7 @@ export default function SigninPage(): JSX.Element {
       setTokenCookie(response.data.token);
       setUserCookie(response.data.user);
 
+      window.dispatchEvent(new CustomEvent('auth:login'));
       router.push('/');
     } catch (error) {
       const errorMessage =
@@ -89,7 +90,7 @@ export default function SigninPage(): JSX.Element {
       <div className="text-base-500 mt-6 text-center text-sm">
         Don&apos;t have an account?{' '}
         <Link
-          href="/bso-web/signup"
+          href="/signup"
           className="text-base-500 hover:text-base-700 transition-colors duration-300 hover:underline"
         >
           Sign up

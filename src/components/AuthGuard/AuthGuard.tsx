@@ -9,28 +9,29 @@ import {
 import { usePathname } from 'next/navigation';
 import { useEffect, type JSX, type PropsWithChildren } from 'react';
 
+/** usePathname() retorna o path SEM basePath (ex.: /signin, não /bso-web/signin) */
+const isAuthRoute = (path: string | null): boolean => {
+  if (path == null) return false;
+  return path.startsWith('/signin') || path.startsWith('/signup');
+};
+
 export const AuthGuard = ({ children }: PropsWithChildren): JSX.Element => {
   const pathname = usePathname();
 
   useEffect(() => {
-    const isAuthRoute =
-      pathname?.startsWith('/bso-web/signin') ||
-      pathname?.startsWith('/bso-web/signup');
+    if (pathname == null) return;
+    if (isAuthRoute(pathname)) return;
 
     // Se está em rota de área logada (não é rota de auth)
-    if (!isAuthRoute) {
-      const token = getTokenCookie();
-      const user = getUserCookie();
+    const token = getTokenCookie();
+    const user = getUserCookie();
 
-      // Se não tem token ou user, faz logout
-      if (!token || !user) {
-        onLogout();
-        return;
-      }
-
-      // Valida o token (já faz logout automaticamente se inválido)
-      validateToken();
+    if (!token || !user) {
+      onLogout();
+      return;
     }
+
+    validateToken();
   }, [pathname]);
 
   return <>{children}</>;

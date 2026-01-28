@@ -34,6 +34,9 @@ export const useLogin = (): UseMutationResult<
       queryClient.setQueryData(authQueryKeys.session, { token: data.token });
       queryClient.invalidateQueries({ queryKey: authQueryKeys.user });
       queryClient.invalidateQueries({ queryKey: authQueryKeys.session });
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('auth:login'));
+      }
     },
   });
 };
