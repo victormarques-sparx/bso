@@ -1,1 +1,2 @@
-export * from './CheckUserInstitutions';
+export { CheckUserInstitutions } from './CheckUserInstitutions';
+export { CheckUserInstitutionsGate } from './CheckUserInstitutionsGate';

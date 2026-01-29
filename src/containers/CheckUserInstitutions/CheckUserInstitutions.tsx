@@ -3,9 +3,9 @@
 import {
   useCitiesByState,
   useCountries,
-  useMyProfile,
   useRegisterInstitution,
   useStatesByCountry,
+  usersAdapter,
 } from '@/api';
 import { Button, Modal, Select, TextField } from '@/components';
 import { institutionsConstant } from '@/constants';
@@ -47,17 +47,20 @@ export const CheckUserInstitutions = (): JSX.Element => {
   });
   const selectedState = useWatch({ control, name: 'state', defaultValue: '' });
 
-  const { data: countries = [], isLoading: isLoadingCountries } =
-    useCountries();
-  const { data: states = [], isLoading: isLoadingStates } =
-    useStatesByCountry(selectedCountry);
+  const { data: countries = [], isLoading: isLoadingCountries } = useCountries({
+    enabled: isOpen,
+  });
+  const { data: states = [], isLoading: isLoadingStates } = useStatesByCountry(
+    selectedCountry,
+    { enabled: isOpen }
+  );
   const { data: cities = [], isLoading: isLoadingCities } = useCitiesByState(
     selectedCountry,
-    selectedState
+    selectedState,
+    { enabled: isOpen }
   );
 
   const registerInstitution = useRegisterInstitution();
-  const { data: myProfile, refetch: refetchMyProfile } = useMyProfile();
 
   // Só renderiza se o usuário estiver logado (token existe e está válido)
   const isAuthenticated = token && !isTokenExpired(token) && user;
@@ -103,16 +106,11 @@ export const CheckUserInstitutions = (): JSX.Element => {
       await registerInstitution.mutateAsync(data);
       toast.success('Institution registered successfully');
 
-      // Refaz a busca do perfil para garantir que temos os dados mais recentes
-      const { data: updatedUser } = await refetchMyProfile();
+      // my-profile só é chamado após sucesso do formulário
+      const updatedUser = await usersAdapter.myProfile();
 
-      // Valida novamente se o usuário não tem instituições
       if (updatedUser?.institutions && updatedUser.institutions.length > 0) {
-        // Se o usuário tem instituições, fecha o modal
         setIsOpen(false);
-      } else {
-        // Se ainda não tem instituições, mantém o modal aberto
-        // (pode ser necessário cadastrar mais de uma instituição)
       }
     } catch {
       toast.error('Failed to register institution. Please try again.');

@@ -24,25 +24,25 @@ export const SidebarNavigation = (): JSX.Element => {
   const navigationSections = useMemo(
     () => [
       {
-        href: '/bso-web',
+        href: '/',
         label: 'Home',
         icon: IoHomeOutline,
         enabled: true,
       },
       {
-        href: '/bso-web/transactions',
+        href: '/transactions',
         label: 'Transactions',
         icon: IoSwapHorizontal,
         enabled: true,
       },
       {
-        href: '/bso-web/my-institutions',
+        href: '/my-institutions',
         label: 'My Institutions',
         icon: IoBusinessOutline,
         enabled: true,
       },
       {
-        href: '/bso-web/support',
+        href: '/support',
         label: 'Support',
         icon: IoHelpCircleOutline,
         enabled: true,

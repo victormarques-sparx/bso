@@ -32,7 +32,7 @@ export default function SignupPage(): JSX.Element {
 
       toast.success('Account created successfully');
       resetForm();
-      router.push('/bso-web/signin');
+      router.push('/signin');
     } catch (error) {
       const errorMessage =
         (error instanceof AxiosError && error.response?.data?.message) ||
@@ -118,7 +118,7 @@ export default function SignupPage(): JSX.Element {
             )}
             aria-busy={isSubmitting}
           >
-            <span className="text-base-60 text-sm font-semibold">
+            <span className="text-base-600 text-sm font-semibold">
               {isSubmitting ? 'Creating...' : 'Create Account'}
             </span>
           </button>
@@ -128,7 +128,7 @@ export default function SignupPage(): JSX.Element {
       <div className="text-base-500 mt-6 text-center text-sm">
         Already have an account?{' '}
         <Link
-          href="/bso-web/signin"
+          href="/signin"
           className="text-base-500 hover:text-base-700 transition-colors duration-300 hover:underline"
         >
           Sign in

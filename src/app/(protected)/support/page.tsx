@@ -1,3 +1,4 @@
+import { BASE_PATH } from '@/constants';
 import { cn } from '@/utils';
 import Image from 'next/image';
 import type { JSX } from 'react';
@@ -43,7 +44,7 @@ export default function SupportPage(): JSX.Element {
 
           <div className="mb-8 block sm:mb-0 sm:hidden">
             <Image
-              src="/icon-support.png"
+              src={`${BASE_PATH}/icon-support.png`}
               alt="Support"
               width={500}
               height={500}
@@ -83,7 +84,7 @@ export default function SupportPage(): JSX.Element {
 
         <div className="hidden sm:block">
           <Image
-            src="/icon-support.png"
+            src={`${BASE_PATH}/icon-support.png`}
             alt="Support"
             width={500}
             height={500}

@@ -1,6 +1,6 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { CookieConstant } from './src/constants';
+import { BASE_PATH, CookieConstant } from './src/constants';
 import { isTokenExpired } from './src/services/validateToken';
 
 export function proxy(request: NextRequest): NextResponse {
@@ -17,11 +17,8 @@ export function proxy(request: NextRequest): NextResponse {
 
   // Rotas de autenticação
   const isAuthRoute =
-    pathname.startsWith('/bso-web/signin') ||
-    pathname.startsWith('/bso-web/signup');
-
-  // Rota principal (home logada)
-  const isHomeRoute = pathname === '/bso-web';
+    pathname.startsWith(`${BASE_PATH}/signin`) ||
+    pathname.startsWith(`${BASE_PATH}/signup`);
 
   // Se está em rota de área logada (não é rota de auth)
   if (!isAuthRoute) {
@@ -31,7 +28,7 @@ export function proxy(request: NextRequest): NextResponse {
     // Se não tem token ou user, faz logout (limpa cookies e redireciona)
     if (!token || !user) {
       const response = NextResponse.redirect(
-        new URL('/bso-web/signin', request.url)
+        new URL(`${BASE_PATH}/signin`, request.url)
       );
       response.cookies.delete(CookieConstant.authToken);
       response.cookies.delete(CookieConstant.user);
@@ -44,7 +41,7 @@ export function proxy(request: NextRequest): NextResponse {
     // Se token existe mas está inválido, faz logout (limpa cookies)
     if (!isAuthenticated) {
       const response = NextResponse.redirect(
-        new URL('/bso-web/signin', request.url)
+        new URL(`${BASE_PATH}/signin`, request.url)
       );
       response.cookies.delete(CookieConstant.authToken);
       response.cookies.delete(CookieConstant.user);
@@ -61,7 +58,7 @@ export function proxy(request: NextRequest): NextResponse {
 
   if (isAuthenticated) {
     // Se tentar acessar rotas de auth estando logado, redireciona para home
-    const url = new URL('/bso-web', request.url);
+    const url = new URL(BASE_PATH, request.url);
     return NextResponse.redirect(url);
   }
 
@@ -69,16 +66,9 @@ export function proxy(request: NextRequest): NextResponse {
   return NextResponse.next();
 }
 
-// Configuração do matcher - define em quais rotas o proxy será executado
-export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder files
-     */
-    '/bso-web/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
-  ],
-};
+/*
+ * Nota: Com `output: 'export'` (build estático), middleware não é suportado.
+ * Este proxy pode ser usado em um servidor customizado (ex.: reverse proxy).
+ * Se migrar para middleware, criar `middleware.ts` e usar matcher estático, ex.:
+ *   matcher: ['/bso-web/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)']
+ */
